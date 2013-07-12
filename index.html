@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flask App</title> 
+    <link type="text/css" rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <header>
+        <h1 class="logo">GIF CITY GIF GIF CITY</h1>
+    </header> 
+
+    <div class="gifs">
+        <script id="gifs-template" type="text/x-handlebars-template">
+            {{#each this}}
+                <figure>
+                <a href="{{url}}" target="_blank">
+                    <img src="{{url}}" />
+                    <figcaption>"{{title}}"</figcaption>
+                </a>
+                </figure>
+            {{/each}}
+            <hr />
+        </script>
+    </div>
+   
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
+    <script>
+
+    (function() {
+        var Gifs = {
+            init: function(config) {
+                this.template = config.template;
+                this.container = config.container;
+                this.limit = config.limit;
+                
+                // Initial load
+                this.fetch();
+
+                var win = $(window),
+                    doc = $(document),
+                    self = this;
+       
+                // When we get near the bottom of the window, load more imagesz 
+                // Thanks: http://stackoverflow.com/questions/15181286/
+                // how-to-implement-an-endless-infinite-scroll-within-a-div-in-javascript-jquery
+                win.scroll(function() {
+                    var diff = ((doc.height() - win.height()) - 10);
+                    var topHeight = win.scrollTop();
+                    if (win.scrollTop() > diff) {
+                        console.log('fetching');
+                        self.fetch();
+                    }
+                });
+            },
+
+            attachTemplate: function() {
+                var template = Handlebars.compile(this.template);
+                this.container.append(template(this.posts));
+            },
+            
+            fetch: function() {
+                var self = this,
+                    url = 'http://www.reddit.com/r/gifs/.json?t=all&limit='
+                         + this.limit + '&after='
+                         + this.after + '&jsonp=?';
+
+                $.getJSON(url, function(results) {
+                    self.after = results.data.after;
+                    self.posts = $.map(results.data.children, function(post) {
+                        return {
+                            url: post.data.url,
+                            title: post.data.title
+                        }
+                    });
+                    console.log(self.after);
+                    self.attachTemplate();
+                });
+            },
+        };
+
+        var gifs = Gifs.init({
+            template: $("#gifs-template").html(),
+            container: $('div.gifs'),
+            limit: 25
+        });
+    })();
+
+    </script>
+     
+  </body>
+</html>

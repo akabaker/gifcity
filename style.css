@@ -1,0 +1,53 @@
+body {  
+    background: #222;  
+    color: #666;  
+} 
+
+figcaption {
+    color: white;
+}
+
+figure {
+    float: left;
+}
+
+header {  
+    font-family:Arial, Helvetica, sans-serif;  
+    font-size: 2em;  
+    font-weight: bold;  
+    text-align: center;  
+    margin: 0 auto;  
+    width:800px;  
+    margin-bottom:10px;  
+}  
+
+hr {  
+    margin: 20px;  
+    border:none;  
+    border-top: 1px solid #111;  
+    border-bottom: 1px solid #333;  
+}  
+
+p {  
+    color:#444;  
+    text-align:left;  
+    font-size:10px;  
+    margin-left: 20px;  
+    margin-bottom: -10px;  
+}  
+
+a {  
+    color:#444;  
+}  
+
+img {
+    width: 300px;
+    height: auto;    
+    margin: auto;
+}
+
+img:hover {  
+    border-color:#555;  
+    -moz-box-shadow: 0px 0px 10px #111;  
+    -webkit-box-shadow: 0px 0px 10px #111;  
+} 
