@@ -5,6 +5,7 @@ body {
 
 figcaption {
     color: white;
+    font-family: 'Archivo Narrow', sans-serif; 
 }
 
 figure {
