@@ -5,6 +5,7 @@ body {
 
 figcaption {
     color: white;
+    font-family: 'Archivo Narrow', sans-serif; 
 }
 
 figure {
@@ -39,12 +40,6 @@ p {
 a {  
     color:#444;  
 }  
-
-img {
-    width: 300px;
-    height: auto;    
-    margin: auto;
-}
 
 img:hover {  
     border-color:#555;  

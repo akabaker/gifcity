@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Flask App</title> 
+    <title>Jifs ahoy</title> 
     <link type="text/css" rel="stylesheet" href="style.css">
+    <link href='http://fonts.googleapis.com/css?family=Archivo+Narrow' rel='stylesheet' type='text/css'>
   </head>
   <body>
 
@@ -46,7 +47,7 @@
                 // Thanks: http://stackoverflow.com/questions/15181286/
                 // how-to-implement-an-endless-infinite-scroll-within-a-div-in-javascript-jquery
                 win.scroll(function() {
-                    var diff = ((doc.height() - win.height()) - 10);
+                    var diff = ((doc.height() - win.height()) - 20);
                     var topHeight = win.scrollTop();
                     if (win.scrollTop() > diff) {
                         console.log('fetching');
@@ -62,19 +63,26 @@
             
             fetch: function() {
                 var self = this,
+                    re = /.gif$/i;
                     url = 'http://www.reddit.com/r/gifs/.json?t=all&limit='
                          + this.limit + '&after='
                          + this.after + '&jsonp=?';
 
-                $.getJSON(url, function(results) {
-                    self.after = results.data.after;
+                var xhr = $.getJSON(url, function(results) {
+                    if (self.after === results.data.after) {
+                        xhr.abort();
+                        return
+                    } else {
+                        self.after = results.data.after;
+                    }
                     self.posts = $.map(results.data.children, function(post) {
-                        return {
-                            url: post.data.url,
-                            title: post.data.title
+                        if (post.data.url.match(re)) {
+                            return {
+                                url: post.data.url,
+                                title: post.data.title
+                            }
                         }
                     });
-                    console.log(self.after);
                     self.attachTemplate();
                 });
             },
