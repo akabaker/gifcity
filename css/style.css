@@ -1,7 +1,9 @@
+/*
 body {  
-    background: #222;  
+    background: #151515;  
     color: #666;  
 } 
+*/
 
 figcaption {
     color: white;
@@ -12,14 +14,16 @@ figure {
     float: left;
 }
 
-header {  
-    font-family:Arial, Helvetica, sans-serif;  
-    font-size: 2em;  
+header h1{  
+    font-family: 'Archivo Narrow', sans-serif; 
+    font-size: 100px;  
     font-weight: bold;  
+    color: yellow;
     text-align: center;  
     margin: 0 auto;  
     width:800px;  
     margin-bottom:10px;  
+    margin-top:50px;
 }  
 
 hr {  
@@ -27,6 +31,23 @@ hr {
     border:none;  
     border-top: 1px solid #111;  
     border-bottom: 1px solid #333;  
+}  
+
+#gifs{  
+    margin: 0 auto;  
+    width:800px;  
+    border:1px solid #333;  
+    -moz-border-radius: 10px;  
+    -webkit-border-radius: 10px;  
+    font-family:Verdana, Geneva, sans-serif;  
+    text-align:center;  
+}  
+
+img{  
+    border:10px solid #444;  
+    -moz-border-radius: 5px;  
+    -webkit-border-radius: 10px;  
+    margin: 15px;  
 }  
 
 p {  
@@ -40,6 +61,12 @@ p {
 a {  
     color:#444;  
 }  
+
+img {
+    width: 300px;
+    height: 220px;
+    margin: 10px 10px 10px 10px;
+}
 
 img:hover {  
     border-color:#555;  

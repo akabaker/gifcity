@@ -2,31 +2,43 @@
 <html>
   <head>
     <title>Jifs ahoy</title> 
-    <link type="text/css" rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Archivo+Narrow' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="css/style.css">
   </head>
   <body>
 
     <header>
+        <div class="row">
+            <div class="pull-right span2" style="display:none;">
+                <label for="hide-nsfw">Hide NSFW gifs?</label>
+                <input name="hide-nsfw" id="hide-nsfw" checked="checked" type="checkbox">
+            </div>
+        </div>
         <h1 class="logo">GIF CITY GIF GIF CITY</h1>
     </header> 
 
-    <div class="gifs">
+    <div class="container">
         <script id="gifs-template" type="text/x-handlebars-template">
+            <div class="row">
             {{#each this}}
-                <figure>
-                <a href="{{url}}" target="_blank">
-                    <img src="{{url}}" />
-                    <figcaption>"{{title}}"</figcaption>
-                </a>
-                </figure>
+                <div class="span5 offset1">
+                    <a class="gifs" href="{{url}}" target="_blank">
+                        <img src="{{url}}" />
+                    </a>
+                </div>
             {{/each}}
+            </div>
             <hr />
         </script>
     </div>
    
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script>
 
     (function() {
@@ -35,14 +47,22 @@
                 this.template = config.template;
                 this.container = config.container;
                 this.limit = config.limit;
+
+                var nsfwCheckBox = $("#hide-nsfw"),
+                    self = this;
+
+                this.hideNsfw = nsfwCheckBox.is(':checked');
+
+                nsfwCheckBox.on('change', function() {
+                    self.hideNsfw = nsfwCheckBox.is(':checked');
+                    self.fetch();
+                }); 
                 
-                // Initial load
-                this.fetch();
+                self.fetch();
 
                 var win = $(window),
                     doc = $(document),
                     self = this;
-       
                 // When we get near the bottom of the window, load more imagesz 
                 // Thanks: http://stackoverflow.com/questions/15181286/
                 // how-to-implement-an-endless-infinite-scroll-within-a-div-in-javascript-jquery
@@ -50,7 +70,6 @@
                     var diff = ((doc.height() - win.height()) - 20);
                     var topHeight = win.scrollTop();
                     if (win.scrollTop() > diff) {
-                        console.log('fetching');
                         self.fetch();
                     }
                 });
@@ -59,11 +78,13 @@
             attachTemplate: function() {
                 var template = Handlebars.compile(this.template);
                 this.container.append(template(this.posts));
+                $("body").css("background-image", "url(" + this.posts[0].url + ")");
+                $("body").css("background-repeat", "repeat");
             },
             
             fetch: function() {
                 var self = this,
-                    re = /.gif$/i;
+                    re = /.gif$/i,
                     url = 'http://www.reddit.com/r/gifs/.json?t=all&limit='
                          + this.limit + '&after='
                          + this.after + '&jsonp=?';
@@ -77,9 +98,13 @@
                     }
                     self.posts = $.map(results.data.children, function(post) {
                         if (post.data.url.match(re)) {
-                            return {
-                                url: post.data.url,
-                                title: post.data.title
+                            if (self.hideNsfw && post.data.over_18) {
+                                console.log("NSFW gif " + post.data.url);
+                            } else {
+                                return {
+                                    url: post.data.url,
+                                    title: post.data.title
+                                }
                             }
                         }
                     });
@@ -90,7 +115,7 @@
 
         var gifs = Gifs.init({
             template: $("#gifs-template").html(),
-            container: $('div.gifs'),
+            container: $('div.container'),
             limit: 25
         });
     })();
