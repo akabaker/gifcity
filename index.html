@@ -73,15 +73,16 @@
                         self.fetch();
                     }
                 });
+
+                var body = $("body");
+                body.css("background-image", "url(" + this.posts[0].url + ")");
+                body.css("background-repeat", "repeat");
+                body.css("background-size", "100%");
             },
 
             attachTemplate: function() {
                 var template = Handlebars.compile(this.template);
                 this.container.append(template(this.posts));
-                var body = $("body");
-                body.css("background-image", "url(" + this.posts[0].url + ")");
-                body.css("background-repeat", "repeat");
-                body.css("background-size", "100%");
             },
             
             fetch: function() {
